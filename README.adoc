@@ -6,7 +6,7 @@
 // Contributors:
 //     IBM Corporation
 //
-:projectid: microprofile-reactive-messaging
+:projectid: microprofile-reactive-messaging-rest
 :page-layout: guide-multipane
 :page-duration: 20 minutes
 :page-releasedate: 2020-04-22
@@ -18,7 +18,7 @@
 :page-related-guides: ['reactive-service-testing']
 :page-permalink: /guides/{projectid}
 :imagesdir: /img/guide/{projectid}
-:page-seo-title: Creating asynchronous Java microservices using MicroProfile Reactive Messaging 
+:page-seo-title: Creating asynchronous Java rest microservices using MicroProfile Reactive Messaging 
 :page-seo-description: A getting started reactive programming tutorial with examples on how to send and receive messages between asynchronous Java microservices using Eclipse MicroProfile Reactive Messaging and Apache Kafka.
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/dev
 :source-highlighter: prettify

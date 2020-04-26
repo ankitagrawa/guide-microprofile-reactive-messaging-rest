@@ -29,8 +29,13 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
+import org.eclipse.microprofile.reactive.messaging.Outgoing;
+import org.reactivestreams.Publisher;
 
+import io.openliberty.guides.models.MemoryStatus;
+import io.openliberty.guides.models.PropertyMessage;
 import io.openliberty.guides.models.SystemLoad;
+
 
 @ApplicationScoped
 //tag::inventoryEndPoint[]
@@ -39,6 +44,7 @@ import io.openliberty.guides.models.SystemLoad;
 public class InventoryResource {
 
     private static Logger logger = Logger.getLogger(InventoryResource.class.getName());
+    private FlowableEmitter<String> property;
 
     @Inject
     private InventoryManager manager;
@@ -73,6 +79,18 @@ public class InventoryResource {
                 .entity("hostname does not exist.")
                 .build();
     }
+    
+    @GET
+    @Path("/systems/{propertyName}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSystemProperty(@PathParam("propertyName") String propertyName) {
+        logger.info("getSystemProperty: " + propertyName);
+        property.onNext(propertyName);
+        return Response
+                   .status(Response.Status.OK)
+                   .entity(propertyName)
+                   .build();
+    }
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
@@ -98,4 +116,42 @@ public class InventoryResource {
         }
     }
     // end::updateStatus[]
+    
+    // tag::memoryStatus[]
+    @Incoming("memoryStatus")
+    // end::memoryStatus[]
+    public void updateStatus(MemoryStatus m)  {
+        String hostId = m.hostId;
+        if (manager.getSystem(hostId).isPresent()) {
+            manager.updateMemoryStatus(hostId, m.memoryUsed, m.memoryMax);
+            logger.info("Host " + hostId + " was updated: " + m);
+        } else {
+            manager.addSystem(hostId, m.memoryUsed, m.memoryMax);
+            logger.info("Host " + hostId + " was added: " + m);
+        }
+    }
+    
+    // tag::propertyMessage[]
+    @Incoming("propertyMessage")
+    // end::propertyMessage[]
+    public void getPropertyMessage(PropertyMessage pm)  {
+        logger.info("getPropertyMessage: " + pm);
+        String hostId = pm.hostId;
+        if (manager.getSystem(hostId).isPresent()) {
+            manager.updatePropertyMessage(hostId, pm.key, pm.value);
+            logger.info("Host " + hostId + " was updated: " + pm);
+        } else {
+            manager.addSystem(hostId, pm.key, pm.value);
+            logger.info("Host " + hostId + " was added: " + pm);
+        }
+    }
+    
+    // tag::OutgoingPropertyName[]
+    @Outgoing("propertyName")
+    // end::OutgoingPropertyName[]
+    public Publisher<String> sendPropertyName() {
+        Flowable<String> flowable = Flowable.<String>create(emitter -> 
+            this.property = emitter, BackpressureStrategy.BUFFER);
+        return flowable;
+    }
 }
