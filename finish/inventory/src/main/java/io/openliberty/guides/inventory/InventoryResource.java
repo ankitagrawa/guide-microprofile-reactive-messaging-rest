@@ -91,14 +91,13 @@ public class InventoryResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.TEXT_PLAIN)
     public Response getSystemProperty(@PathParam("propertyName") String propertyName) {
-        System.out.println(propertyName);
         logger.info("getSystemProperty: " + propertyName);
         // tag::flowableEmitter[]
         property.onNext(propertyName);
         // end::flowableEmitter[]
         return Response
                    .status(Response.Status.OK)
-                   .entity(propertyName)
+                   .entity("Request successful for the " + propertyName + " property")
                    .build();
     }
     // end::getSystemProperty[]
