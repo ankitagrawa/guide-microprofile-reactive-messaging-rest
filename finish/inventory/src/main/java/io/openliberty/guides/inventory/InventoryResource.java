@@ -85,11 +85,12 @@ public class InventoryResource {
                 .build();
     }
     
-    // tag::getSystemProperty[]
+    
     @POST
     @Path("/systems/property/{propertyName}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.TEXT_PLAIN)
+    // tag::getSystemProperty[]
     public Response getSystemProperty(@PathParam("propertyName") String propertyName) {
         logger.info("getSystemProperty: " + propertyName);
         // tag::flowableEmitter[]
@@ -127,7 +128,7 @@ public class InventoryResource {
     }
     // end::updateStatus[]
     
-    // tag::updateStatus[]
+    // tag::updateStatus1[]
     // tag::memoryStatus[]
     @Incoming("memoryStatus")
     // end::memoryStatus[]
@@ -141,7 +142,7 @@ public class InventoryResource {
             logger.info("Host " + hostId + " was added: " + m);
         }
     }
-    // end::updateStatus[]
+    // end::updateStatus1[]
     
     // tag::propertyMessage[]
     @Incoming("propertyMessage")

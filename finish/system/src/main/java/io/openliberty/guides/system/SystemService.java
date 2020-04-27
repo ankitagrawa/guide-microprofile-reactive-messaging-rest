@@ -70,13 +70,13 @@ public class SystemService {
     @Outgoing("memoryStatus")
     // end::publishMemoryUsage[]
     public Publisher<MemoryStatus> sendMemoryUsage() {
-        // tag::flowableInterval[]
+        // tag::flowableInterval1[]
         return Flowable.interval(15, TimeUnit.SECONDS)
                 .map((interavl -> {
                     return new MemoryStatus(getHostname() , 
                             new Long(memBean.getHeapMemoryUsage().getUsed()), 
                             new Long(memBean.getHeapMemoryUsage().getMax()));}));
-        // end::flowableInterval[]
+        // end::flowableInterval1[]
     }
     // end::sendMemoryUsage[]
 
