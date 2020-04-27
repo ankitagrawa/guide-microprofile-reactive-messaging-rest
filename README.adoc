@@ -244,27 +244,90 @@ include::{common-includes}/os-tabs.adoc[]
 
 After the application is up and running, you can access the application by making a GET request to the `/systems` endpoint of the `inventory` service. 
 
-Go to the http://localhost:9085/inventory/systems[^] URL to access the inventory microservice. You see the CPU `systemLoad` property for all the systems:
+Go to the http://localhost:9085/inventory/systems[^] URL to access the inventory microservice. You see the CPU `systemLoad`, JVM `memoryUsed` and `memoryMax` property for all the systems:
 
 [source, role='no_copy']
 ----
 {
    "hostname":"30bec2b63a96",
-   "systemLoad":2.25927734375
+   "memoryUsed":50582400,
+   "memoryMax":1032257536,
+   "systemLoad":1.44
 }
 ----
 
-You can revisit the http://localhost:9085/inventory/systems[^] URL after a while, and you will notice the CPU `systemLoad` property for the systems changed.
+You can revisit the http://localhost:9085/inventory/systems[^] URL after a while, and you will notice the CPU `systemLoad`, JVM `memoryUsed` property for the systems changed.
 
-You can use the `\http://localhost:9085/inventory/systems/{hostname}` URL to see the CPU `systemLoad` property for one particular system.
+You can use the `\http://localhost:9085/inventory/systems/{hostname}` URL to see the CPU `systemLoad`, JVM `memoryUsed` and `memoryMax` property for one particular system.
 
-In the following example, the `30bec2b63a96` value is the `hostname`. If you go to the `\http://localhost:9085/inventory/systems/30bec2b63a96` URL, you can see the CPU `systemLoad` property only for the `30bec2b63a96` `hostname`:
+In the following example, the `30bec2b63a96` value is the `hostname`. If you go to the `\http://localhost:9085/inventory/systems/30bec2b63a96` URL, you can see the properties only for the `30bec2b63a96` `hostname`:
 
 [source, role='no_copy']
 ----
 {
    "hostname":"30bec2b63a96",
-   "systemLoad":2.25927734375
+   "memoryUsed":50582400,
+   "memoryMax":1032257536,
+   "systemLoad":1.44
+}
+----
+
+// add statement about bridge
+
+You can use the `\http://localhost:9085/inventory/systems/property/{propertyName}` URL to see the value of a particular system property.
+
+For ex. : The `\http://localhost:9085/inventory/systems/property/os.name` will give you the os.name value for your system.
+
+Make a request to the service by using `curl`:
+
+include::{common-includes}/os-tabs.adoc[]
+
+[.tab_content.windows_section.mac_section]
+--
+[role=command]
+```
+curl -X POST http://localhost:9085/inventory/systems/property/os.name
+```
+
+If the `curl` command is unavailable, then use https://www.getpostman.com/[Postman^]. Postman enables you
+to make requests using a graphical interface. To make a request with Postman, enter `\http://localhost:9085/inventory/systems/property/os.name`
+into the URL bar. Click the blue `Send` button to make the request.
+--
+
+[.tab_content.linux_section]
+--
+[role=command]
+```
+curl -X POST http://localhost:9085/inventory/systems/property/os.name
+```
+--
+
+You will see the following output:
+
+[source, role="no_copy"]
+----
+HTTP/1.1 200 OK
+x-powered-by: Servlet/4.0
+content-type: application/json
+date: Mon, 19 Aug 2019 19:49:47 GMT
+content-language: en-US
+x-envoy-upstream-service-time: 4242
+server: 
+transfer-encoding: chunked
+----
+
+Since the `system` service is available, the request to the service is successful and returns a `200` response code.
+
+You can revisit the http://localhost:9085/inventory/systems[^] URL and you would see the `os.name` system property value in addition to the previous values :
+
+[source, role='no_copy']
+----
+{
+   "hostname":"30bec2b63a96",
+   "memoryUsed":50582400,
+   "os.name":"Linux",
+   "memoryMax":1032257536,
+   "systemLoad":1.44
 }
 ----
 
@@ -295,12 +358,3 @@ include::{common-includes}/os-tabs.adoc[]
 You just developed a reactive Java application using MicroProfile Reactive Messaging, Open Liberty, and Kakfa.
 
 include::{common-includes}/attribution.adoc[subs="attributes"]
-
-//
-http://localhost:9085/inventory/systems
-hostname:	"8275473add0d"
-memoryUsed:	51328312
-memoryMax:	1032257536
-systemLoad:	1.46
-
-
