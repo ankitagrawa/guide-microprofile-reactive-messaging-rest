@@ -24,12 +24,12 @@ public class PropertyMessage {
 
     private static final Jsonb jsonb = JsonbBuilder.create();
 
-    public String hostId;
+    public String hostname;
     public String key;
     public String value;
     
-    public PropertyMessage(String hostId, String key, String value) {
-        this.hostId = hostId;
+    public PropertyMessage(String hostname, String key, String value) {
+        this.hostname = hostname;
         this.key = key;
         this.value = value;
     }
@@ -42,14 +42,14 @@ public class PropertyMessage {
         if (this == o) return true;
         if (!(o instanceof PropertyMessage)) return false;
         PropertyMessage m = (PropertyMessage) o;
-        return Objects.equals(hostId, m.hostId)
+        return Objects.equals(hostname, m.hostname)
                 && Objects.equals(key, m.key)
                 && Objects.equals(value, m.value);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(hostId, key, value);
+        return Objects.hash(hostname, key, value);
     }
     
     @Override

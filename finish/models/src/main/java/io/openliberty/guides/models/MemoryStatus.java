@@ -24,12 +24,12 @@ public class MemoryStatus {
 
     private static final Jsonb jsonb = JsonbBuilder.create();
 
-    public String hostId;
+    public String hostname;
     public Long memoryUsed;
     public Long memoryMax;
     
-    public MemoryStatus(String hostId, Long memoryUsed, Long memoryMax) {
-        this.hostId = hostId;
+    public MemoryStatus(String hostname, Long memoryUsed, Long memoryMax) {
+        this.hostname = hostname;
         this.memoryUsed = memoryUsed;
         this.memoryMax = memoryMax;
     }
@@ -42,14 +42,14 @@ public class MemoryStatus {
         if (this == o) return true;
         if (!(o instanceof MemoryStatus)) return false;
         MemoryStatus m = (MemoryStatus) o;
-        return Objects.equals(hostId, m.hostId)
+        return Objects.equals(hostname, m.hostname)
                 && Objects.equals(memoryUsed, m.memoryUsed)
                 && Objects.equals(memoryMax, m.memoryMax);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(hostId, memoryUsed, memoryMax);
+        return Objects.hash(hostname, memoryUsed, memoryMax);
     }
     
     @Override

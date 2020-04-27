@@ -295,3 +295,12 @@ include::{common-includes}/os-tabs.adoc[]
 You just developed a reactive Java application using MicroProfile Reactive Messaging, Open Liberty, and Kakfa.
 
 include::{common-includes}/attribution.adoc[subs="attributes"]
+
+//
+http://localhost:9085/inventory/systems
+hostname:	"8275473add0d"
+memoryUsed:	51328312
+memoryMax:	1032257536
+systemLoad:	1.46
+
+

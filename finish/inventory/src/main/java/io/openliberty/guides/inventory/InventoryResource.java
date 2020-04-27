@@ -20,8 +20,10 @@ import java.util.stream.Collectors;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -83,10 +85,12 @@ public class InventoryResource {
                 .build();
     }
     
-    @GET
-    @Path("/systems/{propertyName}")
+    @POST
+    @Path("/systems/property/{propertyName}")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.TEXT_PLAIN)
     public Response getSystemProperty(@PathParam("propertyName") String propertyName) {
+        System.out.println(propertyName);
         logger.info("getSystemProperty: " + propertyName);
         property.onNext(propertyName);
         return Response
@@ -125,7 +129,7 @@ public class InventoryResource {
     @Incoming("memoryStatus")
     // end::memoryStatus[]
     public void updateStatus(MemoryStatus m)  {
-        String hostId = m.hostId;
+        String hostId = m.hostname;
         if (manager.getSystem(hostId).isPresent()) {
             manager.updateMemoryStatus(hostId, m.memoryUsed, m.memoryMax);
             logger.info("Host " + hostId + " was updated: " + m);
@@ -141,7 +145,7 @@ public class InventoryResource {
     // end::propertyMessage[]
     public void getPropertyMessage(PropertyMessage pm)  {
         logger.info("getPropertyMessage: " + pm);
-        String hostId = pm.hostId;
+        String hostId = pm.hostname;
         if (manager.getSystem(hostId).isPresent()) {
             manager.updatePropertyMessage(hostId, pm.key, pm.value);
             logger.info("Host " + hostId + " was updated: " + pm);
