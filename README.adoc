@@ -43,7 +43,7 @@ MicroProfile Reactive Messaging provides an easy way to asynchronously send, rec
 
 The application in this guide consists of two microservices, `system` and `inventory`. Every 15 seconds, the `system` microservice calculates and publishes events that contains its current average system load and current and maximum JVM heap memory usage. The `inventory` microservice subscribes to that information so that it can keep an updated list of all the systems and their current system loads and JVM heap memory usage properties. The `invetory` microservice also subscribes to a POST request response that queries a specific system property on the `system` microservice. The current inventory of systems can be accessed via the `/systems` REST endpoint. You'll create the `system` and `inventory` microservices using MicroProfile Reactive Messaging.
 
-image::reactive-messaging-system-inventory.png[Reactive system inventory,align="center"]
+image::reactive-messaging-system-inventory-rest.png[Reactive system inventory,align="center"]
 
 // =================================================================================================
 // Prerequisites
