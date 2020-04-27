@@ -35,6 +35,9 @@ import org.reactivestreams.Publisher;
 import io.openliberty.guides.models.MemoryStatus;
 import io.openliberty.guides.models.PropertyMessage;
 import io.openliberty.guides.models.SystemLoad;
+import io.reactivex.rxjava3.core.BackpressureStrategy;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.FlowableEmitter;
 
 
 @ApplicationScoped
@@ -117,6 +120,7 @@ public class InventoryResource {
     }
     // end::updateStatus[]
     
+    // tag::updateStatus[]
     // tag::memoryStatus[]
     @Incoming("memoryStatus")
     // end::memoryStatus[]
@@ -130,6 +134,7 @@ public class InventoryResource {
             logger.info("Host " + hostId + " was added: " + m);
         }
     }
+    // end::updateStatus[]
     
     // tag::propertyMessage[]
     @Incoming("propertyMessage")

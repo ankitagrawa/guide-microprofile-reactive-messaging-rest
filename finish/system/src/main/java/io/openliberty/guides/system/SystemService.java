@@ -65,17 +65,22 @@ public class SystemService {
     }
     // end::sendSystemLoad[]
     
+    // tag::sendMemoryUsage[]
     // tag::publishMemoryUsage[]
     @Outgoing("memoryStatus")
     // end::publishMemoryUsage[]
     public Publisher<MemoryStatus> sendMemoryUsage() {
+        // tag::flowableInterval[]
         return Flowable.interval(15, TimeUnit.SECONDS)
                 .map((interavl -> {
                     return new MemoryStatus(getHostname() , 
                             new Long(memBean.getHeapMemoryUsage().getUsed()), 
                             new Long(memBean.getHeapMemoryUsage().getMax()));}));
+        // end::flowableInterval[]
     }
+    // end::sendMemoryUsage[]
 
+    // tag::sendPropertyDetails[]
     @Incoming("getProperty")
     @Outgoing("setProperty")
     public PropertyMessage sendProperty(String propertyName) {
@@ -88,6 +93,7 @@ public class SystemService {
         return new PropertyMessage(getHostname(), 
                     propertyName, 
                     System.getProperty(propertyName, "unknown"));
-    }   
+    }
+    // end::sendPropertyDetails[]
 
 }
