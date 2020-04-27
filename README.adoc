@@ -277,7 +277,7 @@ Make a request to the service by using `curl`:
 
 include::{common-includes}/os-tabs.adoc[]
 
-[.tab_content.windows_section.mac_section.linux_section]
+[.tab_content.windows_section.mac_section]
 --
 [role=command]
 ```
