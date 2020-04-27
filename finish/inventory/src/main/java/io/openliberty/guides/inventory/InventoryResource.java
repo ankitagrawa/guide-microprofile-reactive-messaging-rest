@@ -97,7 +97,7 @@ public class InventoryResource {
         // end::flowableEmitter[]
         return Response
                    .status(Response.Status.OK)
-                   .entity("Request successful for the " + propertyName + " property")
+                   .entity("Request successful for the " + propertyName + " property\n")
                    .build();
     }
     // end::getSystemProperty[]
