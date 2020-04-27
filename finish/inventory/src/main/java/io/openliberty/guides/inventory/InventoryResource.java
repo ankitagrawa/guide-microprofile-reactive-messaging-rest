@@ -85,6 +85,7 @@ public class InventoryResource {
                 .build();
     }
     
+    // tag::getSystemProperty[]
     @POST
     @Path("/systems/property/{propertyName}")
     @Produces(MediaType.APPLICATION_JSON)
@@ -92,12 +93,15 @@ public class InventoryResource {
     public Response getSystemProperty(@PathParam("propertyName") String propertyName) {
         System.out.println(propertyName);
         logger.info("getSystemProperty: " + propertyName);
+        // tag::flowableEmitter[]
         property.onNext(propertyName);
+        // end::flowableEmitter[]
         return Response
                    .status(Response.Status.OK)
                    .entity(propertyName)
                    .build();
     }
+    // end::getSystemProperty[]
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
@@ -159,8 +163,10 @@ public class InventoryResource {
     @Outgoing("propertyName")
     // end::OutgoingPropertyName[]
     public Publisher<String> sendPropertyName() {
+        // tag::flowableCreate[]
         Flowable<String> flowable = Flowable.<String>create(emitter -> 
             this.property = emitter, BackpressureStrategy.BUFFER);
+        // end::flowableCreate[]
         return flowable;
     }
 }

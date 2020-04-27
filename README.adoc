@@ -31,15 +31,15 @@ Learn how to write reactive Java microservices using MicroProfile Reactive Messa
 
 == What you'll learn
 
-You will learn how to trigger RESTful reactive microservices to send requests to other microservices, and asynchronously receive and process the responses. Currently MicroProfile Reactive Messaging implementation works on continuous event streams. i.e. Producer continuously produces events and Consumer consumes those events. This guide helps you to write microservices so that the Producer events would be created when an user hits the RESTful endpoint. You also learn how to bridge the gap between reactive and non reactive application.
+You'll learn how to trigger RESTful reactive microservices to send requests to other microservices, and receive and process responses asynchronously. Current implementation of MicroProfile Reactive Messaging operates on continuous streams of events. E.g. Producer produces events periodically, and Customer consumes those events. This guide helps you write microservices so that when a user hits the RESTful endpoint, producer events are generated. You will also learn how to bridge the gap between reactive applications and non-reactive ones.
 
-If you want to learn more about basic MicroProfile Profile Reactive Messaging basics, see https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating reactive Java microservices^]. It's strongly recommended to go through the basic guide before you go further.
+If you want to learn more about the MicroProfile Profile Reactive Messaging basics, see https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating reactive Java microservices^]. Before you go any further it is highly recommended to go through the basic guide.
 
 *What is MicroProfile Reactive Messaging?*
 
 MicroProfile Reactive Messaging provides an easy way to asynchronously send, receive, and process messages that are received as continuous streams of events. You simply annotate application beans' methods and Open Liberty converts the annotated methods to reactive streams-compatible publishers, subscribers, and processors and connects them up to each other. MicroProfile Reactive Messaging provides a Connector API so that your methods can be connected to external messaging systems that produce and consume the streams of events, such as https://kafka.apache.org/[Apache Kafka^].
 
-The application in this guide consists of two microservices, `system` and `inventory`. Every 15 seconds, the `system` microservice calculates and publishes events that contains its current average system load and current and maximum JVM heap memory usage. The `inventory` microservice subscribes to that information so that it can keep an updated list of all the systems and their current system loads and JVM heap memory usage properties. The `invetory` microservice also subscribes to a POST request response that queries a specific system property on the `system` microservice. The current inventory of systems can be accessed via the `/systems` REST endpoint. You'll create the `system` and `inventory` microservices using MicroProfile Reactive Messaging.
+The application in this guide consists of two microservices, `system` and `inventory`. Every 15 seconds, the `system` microservice calculates and publishes events that contains its current average system load and the current and maximum JVM heap memory usage. The `inventory` microservice subscribes to that information so that it can keep an updated list of all the systems and their current system loads and JVM heap memory usage properties. The `invetory` microservice also subscribes to a POST request response that queries a specific system property on the `system` microservice. The current inventory of systems can be accessed via the `/systems` REST endpoint. You'll create the `system` and `inventory` microservices using MicroProfile Reactive Messaging.
 
 image::reactive-messaging-system-inventory-rest.png[Reactive system inventory,align="center"]
 
@@ -60,8 +60,7 @@ include::{common-includes}/gitclone.adoc[]
 
 Navigate to the `start` directory to begin. 
 
-The `system` microservice is the producer of the messages that are published to the Kafka messaging system as a stream of events. Every 15 seconds, the `system` microservice publishes events that contains its calculation of the average system load (its CPU usage) for the last minute and current and maximum JVM heap memory usage.
-It also processes the specific system property request from the `inventory` microservice and publishes it to the Kafka messaging system.
+The `system` microservice is the producer of the messages that are published to the Kafka messaging system as a stream of events. Every 15 seconds, the `system` microservice publishes events that contains its calculation of the average system load (its CPU usage) for the last minute and the current and maximum JVM heap memory usage. It also processes the specific system property request from the `inventory` microservice and publishes it to the Kafka messaging system.
 
 [role="code_command hotspot file=0", subs="quotes"]
 ----
@@ -81,7 +80,7 @@ system/microprofile-config.properties
 include::finish/system/src/main/resources/META-INF/microprofile-config.properties[]
 ----
 
-The `SystemService` class contains multiple `Publisher` methods [hotspot=sendSystemLoad file=0]`sendSystemLoad()`, which calculates and returns the average system load and [hotspot=sendMemoryUsage file=0]`sendMemoryUsage()`, which calculates and return used and max JVM memory. The [hotspot=publishSystemLoad file=0]`@Outgoing` annotation on the [hotspot=sendSystemLoad file=0]`sendSystemLoad()` and [hotspot=publishMemoryUsage file=0]`sendMemoryUsage()` method indicates that the method publishes its calculation as a message on a topic in the Kafka messaging system. The [hotspot=flowableInterval file=0]`Flowable.interval()` method from `rxJava` is used to set the frequency of how often the system service publishes the calculation to the event stream.
+The `SystemService` class contains multiple `Publisher` methods [hotspot=sendSystemLoad file=0]`sendSystemLoad()`, which calculates and returns the average system load and [hotspot=sendMemoryUsage file=0]`sendMemoryUsage()`, which calculates and return the used and max JVM memory. The [hotspot=publishSystemLoad file=0]`@Outgoing` annotation on the [hotspot=sendSystemLoad file=0]`sendSystemLoad()` and the [hotspot=publishMemoryUsage file=0]`sendMemoryUsage()` method indicates that the method publishes its calculation as a message on a topic in the Kafka messaging system. The [hotspot=flowableInterval file=0]`Flowable.interval()` method from `rxJava` is used to set the frequency of how often the system service publishes the calculation to the event stream.
 
 The `system` microservice also contains a method called [hotspot=sendPropertyDetails file=0]`sendProperty` that receives a system property name from the `inventory` microservice and calculates the requested property on the go and publishes it back to the Kafka. The [hotspot=sendPropertyDetails file=0]`sendProperty` method acts as a processor in this scenario.
 
@@ -112,9 +111,9 @@ include::finish/inventory/src/main/resources/META-INF/microprofile-config.proper
 
 The `inventory` microservice receives the message from the `system` microservice over the [hotspot=systemLoad file=0]`@Incoming("systemLoad")`, [hotspot=memoryStatus file=0]`@Incoming("memoryStatus")` and [hotspot=propertyMessage file=0]`@Incoming("propertyMessage")` channel. The properties of this channel are defined in the [hotspot=systemLoad file=1]`microprofile-config.properties` file. The `inventory` microservice is also a RESTful service that is served at the [hotspot=inventoryEndPoint file=0]`/inventory` endpoint.
 
-The `InventoryResource` class contains an oveloaded method called [hotspot=updateStatus file=0]`updateStatus()`, which receives the message that contains the average system load, used and max JVM memory information and updates its existing inventory of systems and their properties. The [hotspot=systemLoad file=0]`@Incoming("systemLoad")` and [hotspot=memoryStatus file=0]`@Incoming("memoryStatus")` annotations on the [hotspot=updateStatus file=0]`updateStatus()` method indicates that the method retrieves the average system load and used and max JVM memory information by connecting to the channel called [hotspot=systemLoad file=0]`systemLoad` and [hotspot=memoryStatus file=0]`memoryStatus` respectively.
+The `InventoryResource` class contains an overloaded method called [hotspot=updateStatus file=0]`updateStatus()`, which receives the messages that contains the average system load, the used and max JVM memory information and updates its existing inventory of systems and their properties. The [hotspot=systemLoad file=0]`@Incoming("systemLoad")` and [hotspot=memoryStatus file=0]`@Incoming("memoryStatus")` annotations on the [hotspot=updateStatus file=0]`updateStatus()` method indicates that the method retrieves the average system load and the used and max JVM memory information by connecting to the channel called [hotspot=systemLoad file=0]`systemLoad` and [hotspot=memoryStatus file=0]`memoryStatus` respectively.
 
-The `inventory` microservice creates a system property request when a property name is sent in a POST request to the `/systems/{propertyName}` endpoint. The getSystemProperty() method receives a property name and adds it to the FlowableEmitter. The Flowable.create() method from rxJava is used to create a Publisher and an associated emitter. The property name sent to the emitter will be sent to the Publisher. The Publisher is returned from the @Outgoing("propertyName") channel, which is configured in the microprofile-config.properties propertyName stream and MicroProfile Reactive Messaging takes care of assigning the publisher to the channel.
+The `inventory` microservice creates a system property request when a property name is sent in a POST request to the `/systems/{propertyName}` endpoint. The [hotspot=getSystemProperty file=0]`getSystemProperty()` method receives a property name and adds it to the [hotspot=flowableEmitter file=0]`FlowableEmitter`. The [hotspot=flowableCreate file=0]`Flowable.create()` method from rxJava is used to create a Publisher and an associated emitter. The property name sent to the emitter will be sent to the Publisher. The Publisher is returned from the [hotspot=OutgoingPropertyName file=0]`@Outgoing("propertyName")` channel, which is configured in the [hotspot file=1]`microprofile-config.properties` [hotspot=setProperty file=1]`propertyName` stream and MicroProfile Reactive Messaging takes care of assigning the publisher to the channel.
 
 == Configuring the MicroProfile Reactive Messaging connectors for Kafka
 
@@ -270,11 +269,9 @@ In the following example, the `30bec2b63a96` value is the `hostname`. If you go 
 }
 ----
 
-// add statement about bridge
-
 You can use the `\http://localhost:9085/inventory/systems/property/{propertyName}` URL to see the value of a particular system property.
 
-For ex. : The `\http://localhost:9085/inventory/systems/property/os.name` will give you the os.name value for your system.
+For example, : The `\http://localhost:9085/inventory/systems/property/os.name` URL will give you the `os.name` value for your system.
 
 Make a request to the service by using `curl`:
 
