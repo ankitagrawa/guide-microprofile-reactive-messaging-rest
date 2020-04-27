@@ -29,11 +29,9 @@ NOTE: This repository contains the guide documentation source. To view the guide
 
 Learn how to write reactive Java microservices using MicroProfile Reactive Messaging.
 
-//If you want to learn more about RESTful web services and how to build them, see `Creating a RESTful web service` for details about how to build the system service. 
-
 == What you'll learn
 
-You will learn how to trigger RESTful reactive microservices to send requests to other microservices, and asynchronously receive and process the responses. Currently MicroProfile Reactive Messaging implementation works on continuous event streams. i.e. Producer continuously produces events and Consumer consumes those events. This guide helps you to write microservices so that the Producer events would be created when a user hits the endpoint.
+You will learn how to trigger RESTful reactive microservices to send requests to other microservices, and asynchronously receive and process the responses. Currently MicroProfile Reactive Messaging implementation works on continuous event streams. i.e. Producer continuously produces events and Consumer consumes those events. This guide helps you to write microservices so that the Producer events would be created when an user hits the RESTful endpoint. You also learn how to bridge the gap between reactive and non reactive application.
 
 If you want to learn more about basic MicroProfile Profile Reactive Messaging basics, see https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating reactive Java microservices^]. It's strongly recommended to go through the basic guide before you go further.
 
