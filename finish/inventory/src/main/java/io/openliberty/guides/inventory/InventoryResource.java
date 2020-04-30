@@ -34,7 +34,6 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.reactivestreams.Publisher;
 
-import io.openliberty.guides.models.MemoryStatus;
 import io.openliberty.guides.models.PropertyMessage;
 import io.openliberty.guides.models.SystemLoad;
 import io.reactivex.rxjava3.core.BackpressureStrategy;
@@ -127,22 +126,6 @@ public class InventoryResource {
         }
     }
     // end::updateStatus[]
-    
-    // tag::updateStatus1[]
-    // tag::memoryStatus[]
-    @Incoming("memoryStatus")
-    // end::memoryStatus[]
-    public void updateStatus(MemoryStatus m)  {
-        String hostId = m.hostname;
-        if (manager.getSystem(hostId).isPresent()) {
-            manager.updateMemoryStatus(hostId, m.memoryUsed, m.memoryMax);
-            logger.info("Host " + hostId + " was updated: " + m);
-        } else {
-            manager.addSystem(hostId, m.memoryUsed, m.memoryMax);
-            logger.info("Host " + hostId + " was added: " + m);
-        }
-    }
-    // end::updateStatus1[]
     
     // tag::propertyMessage[]
     @Incoming("propertyMessage")

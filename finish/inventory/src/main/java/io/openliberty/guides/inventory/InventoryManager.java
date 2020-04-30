@@ -34,16 +34,6 @@ public class InventoryManager {
         }
     }
 
-    public void addSystem(String hostname, Long memoryUsed, Long memoryMax) {
-        if (!systems.containsKey(hostname)) {
-            Properties p = new Properties();
-            p.put("hostname", hostname);
-            p.put("memoryUsed", memoryUsed);
-            p.put("memoryMax", memoryMax);
-            systems.put(hostname, p);
-        }
-    }
-
     public void addSystem(String hostname, String key, String value) {
         if (!systems.containsKey(hostname)) {
             Properties p = new Properties();
@@ -58,16 +48,6 @@ public class InventoryManager {
         if (p.isPresent()) {
             if (p.get().getProperty(hostname) == null && hostname != null)
                 p.get().put("systemLoad", systemLoad);
-        }
-    }
-
-    public void updateMemoryStatus(String hostname, Long memoryUsed, Long memoryMax) {
-        Optional<Properties> p = getSystem(hostname);
-        if (p.isPresent()) {
-            if (p.get().getProperty(hostname) == null && hostname != null) {
-                p.get().put("memoryUsed", memoryUsed);
-                p.get().put("memoryMax", memoryMax);
-            }
         }
     }
 

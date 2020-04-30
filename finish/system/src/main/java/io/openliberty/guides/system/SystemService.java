@@ -13,7 +13,6 @@
 package io.openliberty.guides.system;
 
 import java.lang.management.ManagementFactory;
-import java.lang.management.MemoryMXBean;
 import java.lang.management.OperatingSystemMXBean;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -26,7 +25,6 @@ import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 import org.reactivestreams.Publisher;
 
-import io.openliberty.guides.models.MemoryStatus;
 import io.openliberty.guides.models.PropertyMessage;
 import io.openliberty.guides.models.SystemLoad;
 import io.reactivex.rxjava3.core.Flowable;
@@ -36,7 +34,6 @@ public class SystemService {
     
     private static Logger logger = Logger.getLogger(SystemService.class.getName());
 
-    private static final MemoryMXBean memBean = ManagementFactory.getMemoryMXBean();
     private static final OperatingSystemMXBean osMean = 
             ManagementFactory.getOperatingSystemMXBean();
     private static String hostname = null;
@@ -65,21 +62,6 @@ public class SystemService {
     }
     // end::sendSystemLoad[]
     
-    // tag::sendMemoryUsage[]
-    // tag::publishMemoryUsage[]
-    @Outgoing("memoryStatus")
-    // end::publishMemoryUsage[]
-    public Publisher<MemoryStatus> sendMemoryUsage() {
-        // tag::flowableInterval1[]
-        return Flowable.interval(15, TimeUnit.SECONDS)
-                .map((interavl -> {
-                    return new MemoryStatus(getHostname() , 
-                            new Long(memBean.getHeapMemoryUsage().getUsed()), 
-                            new Long(memBean.getHeapMemoryUsage().getMax()));}));
-        // end::flowableInterval1[]
-    }
-    // end::sendMemoryUsage[]
-
     // tag::sendPropertyDetails[]
     @Incoming("getProperty")
     @Outgoing("setProperty")

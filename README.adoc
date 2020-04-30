@@ -12,32 +12,28 @@
 :page-releasedate: 2020-04-22
 :page-guide-category: microprofile
 :page-essential: false
-:page-description: Learn how to use MicroProfile Reactive Messaging to implement an application with a reactive architecture.
+:page-description: Learn how to trigger messages in reactive Java microservice by a RESTful endpoint
 :guide-author: Open Liberty
 :page-tags: ['MicroProfile', 'Jakarta EE']
 :page-related-guides: ['reactive-service-testing']
 :page-permalink: /guides/{projectid}
 :imagesdir: /img/guide/{projectid}
-:page-seo-title: Creating asynchronous Java rest microservices using MicroProfile Reactive Messaging 
-:page-seo-description: A getting started reactive programming tutorial with examples on how to send and receive messages between asynchronous Java microservices using Eclipse MicroProfile Reactive Messaging and Apache Kafka.
+:page-seo-title: Producing messages by RESTful endpoint in reactive Java microservice
+:page-seo-description: A reactive programming tutorial with examples on how to trigger message creation by a RESTful endpoint and send and receive messages between asynchronous Java microservices using Eclipse MicroProfile Reactive Messaging and Apache Kafka.
 :common-includes: https://raw.githubusercontent.com/OpenLiberty/guides-common/dev
 :source-highlighter: prettify
-= Creating RESTful reactive Java microservices
+= Trigger messages in reactive Java microservice by a RESTful endpoint
 
 [.hidden]
 NOTE: This repository contains the guide documentation source. To view the guide in published form, view it on the https://openliberty.io/guides/{projectid}.html[Open Liberty website].   
 
-Learn how to write reactive Java microservices using MicroProfile Reactive Messaging.
+Learn how to trigger messages in reactive Java microservice by a RESTful endpoint.
 
 == What you'll learn
 
-You'll learn how to trigger RESTful reactive microservices to send requests to other microservices, and receive and process responses asynchronously. Current implementation of MicroProfile Reactive Messaging operates on continuous streams of events. E.g. Producer produces events periodically, and Customer consumes those events. This guide helps you write microservices so that when a user hits the RESTful endpoint, producer events are generated. You will also learn how to bridge the gap between reactive applications and non-reactive ones.
+You'll learn how to use RESTful endpoints to trigger microservices to produce and send messages to other microservices using MicroProfile Reactive Messaging. Current implementation of MicroProfile Reactive Messaging operates on continuous streams of events. E.g. Producer produces events periodically, and Customer consumes those events. This guide helps you write microservices so that when a user hits the RESTful endpoint, producer events are generated.  You'll learn how to bridge the gap between reactive applications and the traditional RESTful ones. You'll also learn how we can achieve code execution on demand in the reactive applications.
 
-If you want to learn more about the MicroProfile Profile Reactive Messaging basics, see https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating reactive Java microservices^]. Before you go any further it is highly recommended to go through the basic guide.
-
-*What is MicroProfile Reactive Messaging?*
-
-MicroProfile Reactive Messaging provides an easy way to asynchronously send, receive, and process messages that are received as continuous streams of events. You simply annotate application beans' methods and Open Liberty converts the annotated methods to reactive streams-compatible publishers, subscribers, and processors and connects them up to each other. MicroProfile Reactive Messaging provides a Connector API so that your methods can be connected to external messaging systems that produce and consume the streams of events, such as https://kafka.apache.org/[Apache Kafka^].
+The reactive application in this guide sends and receives messages between services using an external message broker, https://kafka.apache.org/[Apache Kafka^]. Using an external message broker enables asynchronous communications between services so that requests are non-blocking and decoupled from responses. You can learn more about reactive Java services that use an external message broker to manage communications in the https://openliberty.io/guides/microprofile-reactive-messaging.html[Creating reactive Java microservices^] guide. Before you go any further it is highly recommended to go through the basic guide.
 
 The application in this guide consists of two microservices, `system` and `inventory`. Every 15 seconds, the `system` microservice calculates and publishes events that contains its current average system load and the current and maximum JVM heap memory usage. The `inventory` microservice subscribes to that information so that it can keep an updated list of all the systems and their current system loads and JVM heap memory usage properties. The `invetory` microservice also subscribes to a POST request response that queries a specific system property on the `system` microservice. The current inventory of systems can be accessed via the `/systems` REST endpoint. You'll create the `system` and `inventory` microservices using MicroProfile Reactive Messaging.
 
