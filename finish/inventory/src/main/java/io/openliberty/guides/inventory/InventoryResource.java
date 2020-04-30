@@ -84,7 +84,6 @@ public class InventoryResource {
                 .build();
     }
     
-    
     @POST
     @Path("/systems/property/{propertyName}")
     @Produces(MediaType.APPLICATION_JSON)
