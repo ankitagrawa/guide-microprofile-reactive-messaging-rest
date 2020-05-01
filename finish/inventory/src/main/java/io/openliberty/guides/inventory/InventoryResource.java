@@ -85,7 +85,9 @@ public class InventoryResource {
     }
     
     @POST
+    // tag::postPath[]
     @Path("/systems/property/{propertyName}")
+    // end::postPath[]
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.TEXT_PLAIN)
     // tag::getSystemProperty[]
